@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<GroundOverlay>
+  <name>CARDONATOMASV5.000000E-01MS</name>
+  <color>32ffffff</color>
+  <Icon>
+      <href>CardonaTomasv5.000000e-01ms.png</href>
+      <viewBoundScale>1</viewBoundScale>
+  </Icon>
+    <LatLonBox>
+      <north>41.9645736</north>
+      <south>41.8720179</south>
+      <east>1.7933110</east>
+      <west>1.6815400</west>
+	</LatLonBox>
+</GroundOverlay>
+</kml>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<GroundOverlay>
+  <name>VALLOBREGA_FARSITEV5MS</name>
+  <color>32ffffff</color>
+  <Icon>
+      <href>VaLlobrega_Farsitev5ms.png</href>
+      <viewBoundScale>1</viewBoundScale>
+  </Icon>
+    <LatLonBox>
+      <north>41.9402474</north>
+      <south>41.8342834</south>
+      <east>3.1450229</east>
+      <west>3.0018870</west>
+	</LatLonBox>
+</GroundOverlay>
+</kml>

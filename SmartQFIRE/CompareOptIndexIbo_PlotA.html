@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CompareOptIndex</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-09"><meta name="DC.source" content="CompareOptIndex.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">COMPARATIVE SmartQFIRE RUN</a></li><li><a href="#3">Invariants Value at each optimization</a></li><li><a href="#4">Comparative Performance</a></li><li><a href="#5">Optimazed fronts comparison</a></li></ul></div><pre class="codeinput"><span class="comment">% Script to run SmartQFIRE_func optimizing all the invariants</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+</pre><h2>COMPARATIVE SmartQFIRE RUN<a name="2"></a></h2><p>This program runs a constrained optimization on 7 different index (that define 7 different objective functions) and compare their performance</p><pre class="codeinput">clear
+inv_char={<span class="string">'Imwf[s/m]'</span>,<span class="string">'I_Wo[]'</span>,<span class="string">'U [m/s]'</span>,<span class="string">'I_{\theta}[deg]'</span>};
+OptIndexStrng={<span class="string">'CostArea'</span>,<span class="string">'SDI'</span>,<span class="string">'Soersen'</span>,<span class="string">'Jaccard'</span>,<span class="string">'SDI_a'</span>,<span class="string">'Soersen_a'</span>,<span class="string">'Jaccard_a'</span>};
+
+Invariants  = nan(length(OptIndexStrng),length(inv_char));
+filename    = cell(1,length(OptIndexStrng));
+CellI       = cell(1,length(OptIndexStrng));
+xy_model    = cell(1,length(OptIndexStrng));
+costVal     = nan(1,length(OptIndexStrng));
+runTime     = nan(1,length(OptIndexStrng));
+<span class="comment">% figure('Name','Index Exploration') % FALLA MATLAB amb els Axes Handles</span>
+h=waitbar(0,<span class="string">'Running Muliple Index Optimization'</span>);
+
+<span class="keyword">for</span> i=1:length(OptIndexStrng)
+    waitbar(i/(length(OptIndexStrng)+1),h)
+<span class="comment">%     ax1(i)=subplot(2,4,i);</span>
+<span class="comment">%     [I,filename{i}]=SmartQFIRE_func(OptIndexStrng{i},ax1(i));</span>
+    tic
+    [I,filename{i},xy_model{i},xy_real,xy_ini_guess,costVal(i)]=SmartQFIRE_func(OptIndexStrng{i}); <span class="comment">% TO avoid ploting index exploration</span>
+    runTime(i)=toc;
+    CellI{i}=I;
+    Invariants(i,:)=I(end,:);
+
+<span class="keyword">end</span>
+close(h)
+<span class="comment">% PlotInvariantsBar(Invariants,inv_char,OptIndexStrng)</span>
+</pre><pre class="codeoutput">Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+
+Local minimum possible. Constraints satisfied.
+
+fmincon stopped because the size of the current step is less than
+the default value of the step size tolerance and constraints are 
+satisfied to within the default value of the constraint tolerance.
+
+
+
+</pre><img vspace="5" hspace="5" src="CompareOptIndexIbo_PlotA_files/CompareOptIndex_01.png" alt=""> <h2>Invariants Value at each optimization<a name="3"></a></h2><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'BARPLOT'</span>)
+<span class="keyword">for</span> i=1:length(inv_char)
+    ax(i)=subplot(2,2,i);
+        bar(ax(i),Invariants(:,i))
+        title(sprintf(<span class="string">'%s'</span>,inv_char{i}))
+        xlabel(<span class="string">'Optimized Index'</span>)
+        ylabel(sprintf(<span class="string">'Value %s'</span>,inv_char{i}))
+<span class="comment">%         ax(i).XTickLabel =inv_char;</span>
+        ax(i).XTickLabel =OptIndexStrng;
+        ax(i).XTickLabelRotation = 45;
+        grid <span class="string">on</span>
+
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="CompareOptIndexIbo_PlotA_files/CompareOptIndex_02.png" alt=""> <h2>Comparative Performance<a name="4"></a></h2><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Iterations'</span>)
+    <span class="comment">%aIt=axes;</span>
+    aIt1=subplot(1,3,1);
+        iter=cellfun(<span class="string">'length'</span>,CellI);
+        bar(iter);
+        ylabel(<span class="string">'Iteration to converge'</span>)
+        aIt1.XTickLabel =OptIndexStrng;
+        aIt1.XTickLabelRotation = 45;
+        grid <span class="string">on</span>
+        title(<span class="string">'Iterations'</span>)
+    aIt2=subplot(1,3,2);
+        bar(runTime)
+        ylabel(<span class="string">'Running time [s]'</span>)
+        aIt2.XTickLabel =OptIndexStrng;
+        aIt2.XTickLabelRotation = 45;
+        grid <span class="string">on</span>
+        title(<span class="string">'Running Time'</span>)
+
+    aIt3=subplot(1,3,3);
+        bar(costVal(2:end)) <span class="comment">% we don't plot AreaCost</span>
+        ylabel(<span class="string">'Optimized Index weighted-sum Value [-]'</span>)
+        aIt3.XTickLabel =OptIndexStrng(2:end);
+        aIt3.XTickLabelRotation = 45;
+        grid <span class="string">on</span>
+        title(<span class="string">'Objective function value'</span>)
+</pre><img vspace="5" hspace="5" src="CompareOptIndexIbo_PlotA_files/CompareOptIndex_03.png" alt=""> <h2>Optimazed fronts comparison<a name="5"></a></h2><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'All Index Optimized Fronts'</span>)
+    Hax=[];
+    Hax(1)=plot_fronts_cell(xy_ini_guess.xy,<span class="string">'hold'</span>,<span class="string">'--g'</span>);
+    Cmap=parula(length(OptIndexStrng));
+    <span class="keyword">for</span> i=1:length(OptIndexStrng)
+        Hax(i+1)=plot_fronts_cell(xy_model{i}.xy,<span class="string">'hold'</span>,Cmap(i,:)); <span class="comment">%color?</span>
+    <span class="keyword">end</span>
+    Hax(end+1)=plot_fronts_cell(xy_real,<span class="string">'hold'</span>,<span class="string">'-k'</span>);
+    <span class="comment">%legend(Hax,['Obs','Ini Guess', OptIndexStrng])</span>
+    legend(Hax,{<span class="string">'Ini Guess'</span>, OptIndexStrng{:},<span class="string">'Obs'</span>})
+    title(<span class="string">'Best assimilated front VS Opt Index'</span>)
+</pre><img vspace="5" hspace="5" src="CompareOptIndexIbo_PlotA_files/CompareOptIndex_04.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB® R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Script to run SmartQFIRE_func optimizing all the invariants
+%
+%
+%% COMPARATIVE SmartQFIRE RUN 
+% This program runs a constrained optimization on 7 different index (that
+% define 7 different objective functions) and compare their performance
+
+clear
+inv_char={'Imwf[s/m]','I_Wo[]','U [m/s]','I_{\theta}[deg]'};
+OptIndexStrng={'CostArea','SDI','Soersen','Jaccard','SDI_a','Soersen_a','Jaccard_a'};
+
+Invariants  = nan(length(OptIndexStrng),length(inv_char));
+filename    = cell(1,length(OptIndexStrng));
+CellI       = cell(1,length(OptIndexStrng));
+xy_model    = cell(1,length(OptIndexStrng));
+costVal     = nan(1,length(OptIndexStrng));
+runTime     = nan(1,length(OptIndexStrng)); 
+% figure('Name','Index Exploration') % FALLA MATLAB amb els Axes Handles
+h=waitbar(0,'Running Muliple Index Optimization');
+
+for i=1:length(OptIndexStrng)
+    waitbar(i/(length(OptIndexStrng)+1),h)
+%     ax1(i)=subplot(2,4,i);
+%     [I,filename{i}]=SmartQFIRE_func(OptIndexStrng{i},ax1(i));
+    tic
+    [I,filename{i},xy_model{i},xy_real,xy_ini_guess,costVal(i)]=SmartQFIRE_func(OptIndexStrng{i}); % TO avoid ploting index exploration
+    runTime(i)=toc;
+    CellI{i}=I;
+    Invariants(i,:)=I(end,:);
+    
+end
+close(h)
+% PlotInvariantsBar(Invariants,inv_char,OptIndexStrng)
+
+%% Invariants Value at each optimization
+figure('Name','BARPLOT')
+for i=1:length(inv_char)
+    ax(i)=subplot(2,2,i);
+        bar(ax(i),Invariants(:,i))
+        title(sprintf('%s',inv_char{i}))
+        xlabel('Optimized Index')
+        ylabel(sprintf('Value %s',inv_char{i}))
+%         ax(i).XTickLabel =inv_char;
+        ax(i).XTickLabel =OptIndexStrng;
+        ax(i).XTickLabelRotation = 45;
+        grid on
+
+end
+
+%% Comparative Performance
+figure('Name','Iterations')
+    %aIt=axes;
+    aIt1=subplot(1,3,1);
+        iter=cellfun('length',CellI);
+        bar(iter);
+        ylabel('Iteration to converge')
+        aIt1.XTickLabel =OptIndexStrng;
+        aIt1.XTickLabelRotation = 45;
+        grid on
+        title('Iterations')
+    aIt2=subplot(1,3,2);
+        bar(runTime)
+        ylabel('Running time [s]')
+        aIt2.XTickLabel =OptIndexStrng;
+        aIt2.XTickLabelRotation = 45;
+        grid on
+        title('Running Time')
+        
+    aIt3=subplot(1,3,3);
+        bar(costVal(2:end)) % we don't plot AreaCost
+        ylabel('Optimized Index weighted-sum Value [-]')
+        aIt3.XTickLabel =OptIndexStrng(2:end);
+        aIt3.XTickLabelRotation = 45;
+        grid on
+        title('Objective function value')
+       
+%% Optimazed fronts comparison
+
+figure('Name','All Index Optimized Fronts')   
+    Hax=[];
+    Hax(1)=plot_fronts_cell(xy_ini_guess.xy,'hold','REPLACE_WITH_DASH_DASHg');
+    Cmap=parula(length(OptIndexStrng));
+    for i=1:length(OptIndexStrng)
+        Hax(i+1)=plot_fronts_cell(xy_model{i}.xy,'hold',Cmap(i,:)); %color?
+    end
+    Hax(end+1)=plot_fronts_cell(xy_real,'hold','-k');
+    %legend(Hax,['Obs','Ini Guess', OptIndexStrng])
+    legend(Hax,{'Ini Guess', OptIndexStrng{:},'Obs'})
+    title('Best assimilated front VS Opt Index')
+
+##### SOURCE END #####
+--></body></html>

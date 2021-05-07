@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<GroundOverlay>
+  <name>MONTSENY SYNTHV3MS</name>
+  <color>32ffffff</color>
+  <Icon>
+      <href>Montseny Synthv3ms.png</href>
+      <viewBoundScale>1</viewBoundScale>
+  </Icon>
+    <LatLonBox>
+      <north>41.8229621</north>
+      <south>41.7148577</south>
+      <east>2.4767716</east>
+      <west>2.3182492</west>
+	</LatLonBox>
+</GroundOverlay>
+</kml>

@@ -1,0 +1,196 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ConstOptSmartQFIRE</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-09"><meta name="DC.source" content="ConstOptSmartQFIRE.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Constrained Optimization</span>
+<span class="comment">% http://es.mathworks.com/help/optim/ug/fmincon.html</span>
+<span class="comment">%</span>
+<span class="comment">% x = fmincon(fun,x0,A,b,Aeq,beq,lb,ub) defines a set of lower and upper</span>
+<span class="comment">% bounds on the design variables in x, so that the solution is always in</span>
+<span class="comment">% the range lb ? x ? ub. If no equalities exist, set Aeq = [] and beq = [].</span>
+<span class="comment">% If x(i) is unbounded below, set lb(i) = -Inf, and if x(i) is unbounded</span>
+<span class="comment">% above, set ub(i) = Inf.</span>
+
+<span class="keyword">function</span> [x fval Invarians CostVal] = ConstOptSmartQFIRE(xy_real,fuelA,aspectA,slopeA,weight,dt,I,OptIndexCh,fId)
+    Invarians = [];
+    CostVal = [];
+
+<span class="comment">% http://es.mathworks.com/help/optim/ug/optimoptions-and-optimset.html</span>
+<span class="comment">% WITHOUT OptimizationToolbox</span>
+<span class="comment">%    opt=optimset; %creat an optimization object</span>
+<span class="comment">%     opt.OutputFcn=@SaveTheOutputs;</span>
+<span class="comment">%     %opt.PlotFcns=@optimplotx;</span>
+<span class="comment">%     opt.PlotFcns=@optimplotfval;</span>
+<span class="comment">%     % Convergence criteria (default 1e-4!) both</span>
+<span class="comment">%     %opt.TolX=1e-0;</span>
+<span class="comment">%     %opt.TolFun=1e-0;</span>
+
+<span class="comment">% WITH OptimizationToolbox</span>
+<span class="comment">%opt = optimoptions('fmincon','Algorithm','quasi-newton'); FMINCON!!</span>
+opt = optimoptions(<span class="string">'fmincon'</span>,<span class="string">'Algorithm'</span>,<span class="string">'interior-point'</span>);
+<span class="comment">% opt = optimoptions('fmincon','Algorithm','sqp');</span>
+<span class="comment">% opt = optimoptions('fmincon','Algorithm','active-set');</span>
+
+
+<span class="comment">%opt.Display = 'iter'; %print iterations at command line</span>
+opt.OutputFcn=@SaveTheOutputs;
+opt.PlotFcns=@optimplotfval;
+
+<span class="comment">%Definitions</span>
+    A   = [];
+    b   = [];
+    Aeq = [];
+    beq = [];
+    lb  = [0.001,0.01,0,-2*pi()]; <span class="comment">%low domain value</span>
+    ub  = [10,1.2,20,2*pi()]; <span class="comment">% high domain value</span>
+    nonlcon= [];
+<span class="comment">%     subjects the minimization to the nonlinear inequalities c(x) or</span>
+<span class="comment">%     equalities ceq(x) defined in nonlcon.</span>
+    f=@(v) cost2opt(v,xy_real{1},xy_real,fuelA,aspectA,slopeA,weight,dt,OptIndexCh,fId);
+
+    <span class="comment">%Run optimization</span>
+    [x fval] = fmincon(f,I,A,b,Aeq,beq,lb,ub,nonlcon,opt);
+
+    <span class="comment">%close(gcf) %close invariant plot</span>
+
+    <span class="comment">% Nested functions</span>
+    <span class="keyword">function</span> stop = SaveTheOutputs(x,optimvalues,state)
+        stop = false;
+        <span class="keyword">if</span> isequal(state,<span class="string">'iter'</span>)
+          Invarians = [Invarians; x];
+          CostVal = [CostVal; optimvalues.fval];
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Error using ConstOptSmartQFIRE (line 45)
+Not enough input arguments.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Constrained Optimization
+% http://es.mathworks.com/help/optim/ug/fmincon.html
+%
+% x = fmincon(fun,x0,A,b,Aeq,beq,lb,ub) defines a set of lower and upper 
+% bounds on the design variables in x, so that the solution is always in 
+% the range lb ? x ? ub. If no equalities exist, set Aeq = [] and beq = []. 
+% If x(i) is unbounded below, set lb(i) = -Inf, and if x(i) is unbounded 
+% above, set ub(i) = Inf.
+
+function [x fval Invarians CostVal] = ConstOptSmartQFIRE(xy_real,fuelA,aspectA,slopeA,weight,dt,I,OptIndexCh,fId)
+    Invarians = [];
+    CostVal = [];
+
+% http://es.mathworks.com/help/optim/ug/optimoptions-and-optimset.html    
+% WITHOUT OptimizationToolbox
+%    opt=optimset; %creat an optimization object
+%     opt.OutputFcn=@SaveTheOutputs;
+%     %opt.PlotFcns=@optimplotx;
+%     opt.PlotFcns=@optimplotfval;  
+%     % Convergence criteria (default 1e-4!) both
+%     %opt.TolX=1e-0;
+%     %opt.TolFun=1e-0;
+
+% WITH OptimizationToolbox
+%opt = optimoptions('fmincon','Algorithm','quasi-newton'); FMINCON!!
+opt = optimoptions('fmincon','Algorithm','interior-point');
+% opt = optimoptions('fmincon','Algorithm','sqp');
+% opt = optimoptions('fmincon','Algorithm','active-set');
+
+
+%opt.Display = 'iter'; %print iterations at command line
+opt.OutputFcn=@SaveTheOutputs;
+opt.PlotFcns=@optimplotfval; 
+
+%Definitions
+    A   = [];  
+    b   = [];
+    Aeq = [];
+    beq = [];
+    lb  = [0.001,0.01,0,-2*pi()]; %low domain value
+    ub  = [10,1.2,20,2*pi()]; % high domain value
+    nonlcon= [];
+%     subjects the minimization to the nonlinear inequalities c(x) or 
+%     equalities ceq(x) defined in nonlcon. 
+    f=@(v) cost2opt(v,xy_real{1},xy_real,fuelA,aspectA,slopeA,weight,dt,OptIndexCh,fId);
+    
+    %Run optimization
+    [x fval] = fmincon(f,I,A,b,Aeq,beq,lb,ub,nonlcon,opt);
+    
+    %close(gcf) %close invariant plot
+    
+    % Nested functions
+    function stop = SaveTheOutputs(x,optimvalues,state)
+        stop = false;
+        if isequal(state,'iter')
+          Invarians = [Invarians; x];
+          CostVal = [CostVal; optimvalues.fval];
+        end
+    end
+    
+end
+##### SOURCE END #####
+--></body></html>

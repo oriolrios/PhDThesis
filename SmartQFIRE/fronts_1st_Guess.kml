@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+<name>FRONTS_1ST_GUESS</name>
+<open>1</open>
+<description><![CDATA[Front isochrones from <n>fronts_1st_Guess</n>.<br/>By Miguel Muñoz & Oriol Rios copy; 2014]]></description>
+<Style id="T0 + 0 SEC">
+ <LineStyle>
+   <color>#ff00ff00 </color>
+   <width>4</width>
+ </LineStyle>
+</Style>
+<Style id="T0 + 10 SEC">
+ <LineStyle>
+   <color>#ff00ff00 </color>
+   <width>4</width>
+ </LineStyle>
+</Style>
+<Style id="T0 + 20 SEC">
+ <LineStyle>
+   <color>#ff00ff00 </color>
+   <width>4</width>
+ </LineStyle>
+</Style>
+<Folder>
+<name>T0 + 0 SEC</name>
+<open>0</open>
+<Placemark>
+ <name>T0 + 0 SEC</name>
+ <styleUrl>#T0 + 0 SEC</styleUrl>
+ <LineString>
+   <extrude>0</extrude>
+   <tessellate>0</tessellate>
+   <altitudeMode>clampToGround</altitudeMode>
+   <coordinates>-1.4877152,0.0001140 -1.4876973,0.0001275 -1.4876704,0.0001479 -1.4876256,0.0001637 -1.4875829,0.0001682 -1.4875403,0.0001817 -1.4875022,0.0001862 -1.4874574,0.0002111 -1.4874237,0.0002269 -1.4873811,0.0002382 -1.4873430,0.0002359 -1.4873004,0.0002314 -1.4872623,0.0002337 -1.4872219,0.0002495 -1.4871950,0.0002562 -1.4871726,0.0002607 -1.4871412,0.0002720 -1.4871188,0.0002743 -1.4870829,0.0002811 -1.4870470,0.0002720 -1.4870223,0.0002607 -1.4870021,0.0002449 -1.4869573,0.0002449 -1.4869304,0.0002495 -1.4868990,0.0002382 -1.4868452,0.0002269 -1.4868003,0.0002133 -1.4867555,0.0002020 -1.4867061,0.0001862 -1.4866523,0.0001817 -1.4866142,0.0001727 -1.4865761,0.0001659 -1.4865267,0.0001524</coordinates>
+ </LineString>
+</Placemark>
+</Folder><Folder>
+<name>T0 + 10 SEC</name>
+<open>0</open>
+<Placemark>
+ <name>T0 + 10 SEC</name>
+ <styleUrl>#T0 + 10 SEC</styleUrl>
+ <LineString>
+   <extrude>0</extrude>
+   <tessellate>0</tessellate>
+   <altitudeMode>clampToGround</altitudeMode>
+   <coordinates>-1.4877108,0.0001106 -1.4876119,0.0001592 -1.4875129,0.0002079 -1.4873100,0.0002626 -1.4872123,0.0002803 -1.4872123,0.0002803 -1.4871145,0.0002980 -1.4870205,0.0002848 -1.4869264,0.0002716 -1.4867207,0.0002284 -1.4866312,0.0002104 -1.4865417,0.0001924 -1.4865318,0.0001707 -1.4865318,0.0001707 -1.4865219,0.0001490 -1.4877108,0.0001106</coordinates>
+ </LineString>
+</Placemark>
+</Folder><Folder>
+<name>T0 + 20 SEC</name>
+<open>0</open>
+<Placemark>
+ <name>T0 + 20 SEC</name>
+ <styleUrl>#T0 + 20 SEC</styleUrl>
+ <LineString>
+   <extrude>0</extrude>
+   <tessellate>0</tessellate>
+   <altitudeMode>clampToGround</altitudeMode>
+   <coordinates>-1.4877031,0.0001037 -1.4875847,0.0001807 -1.4874663,0.0002577 -1.4872561,0.0003146 -1.4871538,0.0003330 -1.4871538,0.0003330 -1.4870514,0.0003514 -1.4869549,0.0003380 -1.4868583,0.0003246 -1.4866522,0.0002813 -1.4865610,0.0002627 -1.4865610,0.0002627 -1.4864698,0.0002441 -1.4864909,0.0001931 -1.4865119,0.0001422 -1.4877031,0.0001037</coordinates>
+ </LineString>
+</Placemark>
+</Folder>
+</Document>
+</kml>
